@@ -10,6 +10,7 @@ import { initTable } from "./components/table.js";
 import { initPagination } from "./components/pagination.js";
 import { initSorting } from "./components/sorting.js";
 import { initFiltering } from "./components/filtering.js";
+import { initSearching } from "./components/searching.js";
 // @todo: подключение
 
 // Исходные данные используемые в render()
@@ -37,11 +38,12 @@ function collectState() {
 function render(action) {
   let state = collectState(); // состояние полей из таблицы
   let result = [...data]; // копируем для последующего изменения
+  console.log(state);
   // @todo: использование
+  result = applySearching(result, state, action);
   result = applyFiltering(result, state, action);
   result = applySorting(result, state, action);
   result = applyPagination(result, state, action);
-
   sampleTable.render(result);
 }
 
@@ -54,8 +56,10 @@ const sampleTable = initTable(
   },
   render
 );
-
+console.log(sampleTable.filter.elements);
 // @todo: инициализация
+const applySearching = initSearching("search");
+//sampleTable.search.elements.search.value);
 const applyFiltering = initFiltering(sampleTable.filter.elements, {
   // передаём элементы фильтра
   searchBySeller: indexes.sellers, // для элемента с именем searchBySeller устанавливаем массив продавцов
@@ -66,7 +70,6 @@ const applySorting = initSorting([
   sampleTable.header.elements.sortByDate,
   sampleTable.header.elements.sortByTotal,
 ]);
-
 const applyPagination = initPagination(
   sampleTable.pagination.elements,
   // передаём сюда элементы пагинации, найденные в шаблоне
