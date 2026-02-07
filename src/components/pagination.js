@@ -4,6 +4,8 @@ export const initPagination = (
   { pages, fromRow, toRow, totalRows },
   createPage,
 ) => {
+  const pageTemplate = pages.firstElementChild.cloneNode(true); // в качестве шаблона берём первый элемент из контейнера со страницами
+  pages.firstElementChild.remove(); // и удаляем его (предполагаем, что там больше ничего, как вариант, можно и всё удалить из pages)
   let pageCount;
 
   const applyPagination = (query, state, action) => {
@@ -38,9 +40,6 @@ export const initPagination = (
 
   const updatePagination = (total, { page, limit }) => {
     pageCount = Math.ceil(total / limit);
-
-    const pageTemplate = pages.firstElementChild.cloneNode(true); // в качестве шаблона берём первый элемент из контейнера со страницами
-    pages.firstElementChild.remove(); // и удаляем его (предполагаем, что там больше ничего, как вариант, можно и всё удалить из pages)
 
     // переносим код, который делали под @todo: #2.4
     const visiblePages = getPages(page, pageCount, 5); // Получим массив страниц, которые нужно показать, выводим только 5 страниц
